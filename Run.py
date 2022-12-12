@@ -7040,7 +7040,9 @@ class WorkThread(QThread):
                                          'RX_PE_X', 'RX_PE_Y', 'RX_X_Skew', 'RX_Y_Skew',
                                          'TIA_AGC_PKD_XQ', 'TIA_AGC_PKD_XI', 'TIA_AGC_PKD_YQ', 'TIA_AGC_PKD_YI',
                                          'TIA_AGC_GC_YI', 'TIA_AGC_GC_YQ', 'TIA_AGC_GC_XI', 'TIA_AGC_GC_XQ',
-                                         'TIA_AGC_DSPin_XQ', 'TIA_AGC_DSPin_XI', 'TIA_AGC_DSPin_YQ', 'TIA_AGC_DSPin_YI'
+                                         'TIA_AGC_DSPin_XQ', 'TIA_AGC_DSPin_XI', 'TIA_AGC_DSPin_YQ', 'TIA_AGC_DSPin_YI',
+                                         'RF_Crosstalk_XQ', 'RF_Crosstalk_XI', 'RF_Crosstalk_YQ', 'RF_Crosstalk_YI',
+                                         'ITLA_Crosstalk_XQ', 'ITLA_Crosstalk_XI', 'ITLA_Crosstalk_YQ','ITLA_Crosstalk_YI'
                                          ))
         column_pe = []
         for i in range(1, int(ave) + 1):
@@ -7838,10 +7840,15 @@ class WorkThread(QThread):
                   [ch, pe_x_ave, pe_y_ave, pe_x_max, pe_y_max, pe_x_min, pe_y_min, pe_x, pe_y, skew_x, skew_y]
                   )
 
+            crosstalk_result=[RF_crosstalk_XI,RF_crosstalk_XQ,RF_crosstalk_YI,RF_crosstalk_YI,RF_crosstalk_YQ,
+                              RF_off_ITLA_on_XI-RF_off_ITLA_off_XI,RF_off_ITLA_on_XQ-RF_off_ITLA_off_XQ,
+                              RF_off_ITLA_on_YI - RF_off_ITLA_off_YI,RF_off_ITLA_on_YQ-RF_off_ITLA_off_YQ,
+                              ]
+
             tt = config + [ch, pe_x_ave, pe_y_ave, pe_x_max, pe_y_max, pe_x_min, pe_y_min, pe_x, pe_y, skew_x, skew_y]+[TIA_AGC_PKD_XQ, TIA_AGC_PKD_XI, TIA_AGC_PKD_YQ, TIA_AGC_PKD_YI,
             TIA_AGC_GC_YI, TIA_AGC_GC_YQ, TIA_AGC_GC_XI, TIA_AGC_GC_XQ,
             TIA_AGC_DSPin_XQ, TIA_AGC_DSPin_XI, TIA_AGC_DSPin_YQ, TIA_AGC_DSPin_YI
-            ]
+            ]+crosstalk_result
             # generate the report and print out the log file
             test_result.loc[p - 1] = tt
             test_result.to_csv(report_file, index=False)
